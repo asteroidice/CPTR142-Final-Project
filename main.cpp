@@ -1,4 +1,4 @@
-#import<iostream>
+/*#import<iostream>
 char BinSrchTree::miniMenu(bool isMiniMenu)
 //A menu that prints options, and takes the user's choice
 {
@@ -40,7 +40,7 @@ int BinSrchTree::menu()
    <<"`&%\\ ` /%&'    |.|        \\ '|8'\n"
    <<"    |o|        | |         | |\n"
    <<"    |.|        | |         | |\n"
-   <<" _\\/ ._\\/____ /__ \\_//__\\\\/___\\_//__/_*/ ____\n"
+   <<" _\\/ ._\\/____ /__ \\_//__\\\\/___\\_//__/_/ ____\n"
     <<"( \\/\\/ )( ___)(  )  / __)(  _  )(  \\/  )( ___)\n"
     <<" )    (  )__)  )(__( (__  )(_)(  )    (  )__) \n"
     <<"(__/\\__)(____)(____)\\___)(_____)(_/\\/\\_)(____)\n";
@@ -92,4 +92,37 @@ int main()
     BinSrchTree a;
    a.menu();
 
+}
+*/
+
+#include <iostream>
+
+using namespace std;
+
+char menu(int choice)
+{
+    cout << "Menu:\n";
+    cout << "1: 'Write'\n";
+    cout << "2: 'Search'\n";
+    cout << "0: Exit the program.'\n";
+    cin >> choice;
+    return choice;
+}
+
+int main()
+{
+    int choice;
+    menu(choice);
+    while(choice!=0)
+    {
+        switch(choice)
+        {
+            case 1:
+                //write
+                break;
+            case 2:
+                //search
+                break;
+        }
+    }
 }
