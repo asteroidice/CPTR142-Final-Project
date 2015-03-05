@@ -15,6 +15,7 @@ char BinSrchTree::miniMenu(bool isMiniMenu)
     cout << "\t7) Run the case specified in the homework." << endl;
     cout << endl << "\t0) Quit." << endl;
     }
+    
     else
     {
         cout << "\n\n1)Build\t\t2)InOrder\t3)LevelOrder\t4)PostOrder\t5)Delete\t\t6)Clear\t\t7)HWCase\n";
