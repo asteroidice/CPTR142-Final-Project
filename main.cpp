@@ -1,3 +1,31 @@
+#import<iostream>
+char BinSrchTree::miniMenu(bool isMiniMenu)
+//A menu that prints options, and takes the user's choice
+{
+    char choice;
+    if (isMiniMenu){
+    cout << endl << "What would you like to do?" << endl;
+    cout << endl;
+    cout << "\t1) Build a binary search tree." << endl;
+    cout << "\t2) Traverse the tree using InOrder." << endl;
+    cout << "\t3) Traverse the tree using LevelOrder." << endl;
+    cout << "\t4) Traverse the tree using PostOrder." << endl;
+    cout << "\t5) Delete a specific node." << endl;
+    cout << "\t6) Clear the tree." << endl;
+    cout << "\t7) Run the case specified in the homework." << endl;
+    cout << endl << "\t0) Quit." << endl;
+    }
+    else
+    {
+        cout << "\n\n1)Build\t\t2)InOrder\t3)LevelOrder\t4)PostOrder\t5)Delete\t\t6)Clear\t\t7)HWCase\n";
+    }
+    cout << endl;
+    cout << ">>>";
+    //choice = getchar();
+    cin >> choice;
+    cout << endl;
+    return choice;
+}
 int BinSrchTree::menu()
 {
 
