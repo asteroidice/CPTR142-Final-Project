@@ -105,6 +105,7 @@ char menu(int choice)
     cout << "1: 'Write'\n";
     cout << "2: 'Search'\n";
     cout << "0: Exit the program.'\n";
+    cout << "Input here: ";
     cin >> choice;
     return choice;
 }
@@ -117,12 +118,13 @@ int main()
     {
         switch(choice)
         {
-            case 1:
-                //write
+            case '1':
+                cout << "Writing now?..." << endl;
                 break;
-            case 2:
-                //search
+            case '2':
+                cout << "Searching now?..." << endl;
                 break;
         }
     }
+    return 0;
 }
