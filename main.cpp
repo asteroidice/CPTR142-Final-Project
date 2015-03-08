@@ -202,7 +202,7 @@ void sortMarbles(void)
     int r = 0;
     int i = 0;
     int b = 1999;
-
+    uint64_t tStart = rdtsc();
     while(i <= b)
     {
         if (marbles[i] == 'B')
@@ -222,9 +222,11 @@ void sortMarbles(void)
             r++;
         }
     }
-
+    uint64_t delta = rdtsc() - tStart;
     for (int j = 0; j < 2000; j++)
         cout << marbles[j] << " ";
+        
+    cout << "\n\nSorted 2000 marbles in " << delta << " uSeconds."
 
 }
 
