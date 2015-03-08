@@ -284,7 +284,7 @@ int main()
             case '0':
                 goodbye();
                 break;
-            default :
+            default:
                 cout << "Invalid option.\n";
                 break;
         }
