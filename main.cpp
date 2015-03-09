@@ -23,7 +23,7 @@ extern "C"
 	}
 }
 
-void runMil(void)
+inline void runMil(void)
 {
     // get size of data file
     //
@@ -68,7 +68,7 @@ void runMil(void)
     int matches = 0;
 
 
-for(int p = 0; p < 1000000; p++)
+for(int p = 0; p < 100000; p++)
 {
     for (int i = 1; i < st.st_size-28; i++)
     {
@@ -92,7 +92,7 @@ for(int p = 0; p < 1000000; p++)
 
 }
 
-    uint64_t delta = (rdtsc() - tStart) / 1000000;
+    uint64_t delta = (rdtsc() - tStart) / 100000;
 
 
     cout << "Time: " << delta << " uSec, Matches: " << matches << "\n";
@@ -107,7 +107,7 @@ for(int p = 0; p < 1000000; p++)
         cout << "  Match: " << i << "\n";
     }
 }
-void searchIntbits(void)
+inline void searchIntbits(void)
 {
     // get size of data file
     //
@@ -182,6 +182,7 @@ void searchIntbits(void)
         cout << "  Match: " << i << "\n";
     }
 }
+
 void sortMarbles(void)
 {
     char marbles[2000];
@@ -225,8 +226,76 @@ void sortMarbles(void)
     uint64_t delta = rdtsc() - tStart;
     for (int j = 0; j < 2000; j++)
         cout << marbles[j] << " ";
-        
-    cout << "\n\nSorted 2000 marbles in " << delta << " uSeconds." << endl;
+
+    cout << "\n\nSorted 2000 marbles in " << delta << " uSeconds.";
+
+}
+
+void sortMillMarbles(void)
+{
+    //array variables
+    char omarbles[2000];
+    char marbles[2000];
+    //file variables
+    ifstream marbleFile;
+    //Time variables.
+    uint64_t sum = 0;
+    uint64_t tStart;
+    //algorythm variables
+    char temp;
+    int r = 0;
+    int i = 0;
+    int b = 1999;
+
+    marbleFile.open("marbles.txt");
+    for (int h = 0; h < 2000; h++)
+    {
+        marbleFile >> omarbles[h];
+    }
+    marbleFile.close();
+
+    for (int j = 0; j < 2000; j++)
+        {
+            cout << omarbles[j] << " ";
+        }
+        cout << endl << endl;
+    for(int count=1; count <=100000; count ++)
+    {
+        for (int j = 0; j < 2000; j++)
+        {
+            marbles[j] = omarbles[j];
+        }
+
+        r = 0;
+        i = 0;
+        b = 1999;
+
+        tStart = rdtsc();
+        while(i <= b)
+        {
+            if (marbles[i] == 'B')
+            {
+                temp = marbles[b];
+                marbles[b] = marbles[i];
+                marbles[i] = temp;
+                b--;
+            }
+            else if (marbles[i] == 'W' || i <= r)
+                i++;
+            else    // i is pointing to a red marble
+            {
+                temp = marbles[r];
+                marbles[r] = marbles[i];
+                marbles[i] = temp;
+                r++;
+            }
+        }
+        sum = rdtsc() - tStart + sum;
+    }//end 100,000 for loop
+        for (int j = 0; j < 2000; j++)
+            cout << marbles[j] << " ";
+
+        cout << "\n\nSorted 2000 marbles in " << sum / 100000 << " uSeconds.";
 
 }
 
@@ -235,8 +304,9 @@ char prompt(char choice)
     cout << endl << "What would you like to do?" << endl;
     cout << endl;
     cout << "\t1) Search through intbits.txt" << endl;
-    cout << "\t2) Search through intbits.txt 1000000 times and find average." << endl;
+    cout << "\t2) Search through intbits.txt 100,000 times and find average." << endl;
     cout << "\t3) Sort marbles.txt" << endl;
+    cout << "\t4) Sort marbles.txt 100,000 times." << endl;
     cout << endl << "\t0) Quit." << endl;
     cout << endl << "Choice\n>>";
     cin >> choice;
@@ -276,12 +346,16 @@ int main()
                 searchIntbits();
                 break;
             case '2':
-                cout << "Searching...1000000 times...bear with us -______- ...\n" << endl;
+                cout << "Searching...100,000 times...bear with us -______- ...\n" << endl;
                 runMil();
                 break;
             case '3':
                 cout << "Sorting now?...\n" << endl;
                 sortMarbles();
+                break;
+            case '4':
+                cout << "Losing marbles...\n\nSorting 100,000 x 2,000 marbles..."<< endl;
+                sortMillMarbles();
                 break;
             case '0':
                 goodbye();
