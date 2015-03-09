@@ -226,7 +226,7 @@ void sortMarbles(void)
     for (int j = 0; j < 2000; j++)
         cout << marbles[j] << " ";
         
-    cout << "\n\nSorted 2000 marbles in " << delta << " uSeconds."
+    cout << "\n\nSorted 2000 marbles in " << delta << " uSeconds." << endl;
 
 }
 
