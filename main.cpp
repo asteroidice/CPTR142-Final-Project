@@ -10,19 +10,6 @@
 
 using namespace std;
 
-
-extern "C"
-{
-	__inline__ uint64_t rdtsc()
-	{
-		uint32_t lo, hi;
-		/* We cannot use "=A", since this would use %rax on x86_64 */
-		__asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
-
-		return (uint64_t)hi << 32 | lo;
-	}
-}
-
 inline void runMil(void)
 {
     // get size of data file
@@ -63,15 +50,17 @@ inline void runMil(void)
 
     //  scan data starting 1 byte in
     //
-    uint64_t tStart = rdtsc();
+    clock_t tStart = clock();
 
     int matches = 0;
 
-
-for(int p = 0; p < 100000; p++)
+//loop that runs mil times
+for(int p = 0; p < 1000000; p++)
 {
+    //main searching loop.
     for (int i = 1; i < st.st_size-28; i++)
     {
+
         bool bFound = true;
         for (int j = 0; j < 28; j++)
         {
@@ -81,22 +70,25 @@ for(int p = 0; p < 100000; p++)
                 break;
             }
         }
-        if (!bFound)
-            continue;
+        if (bFound)
+        {
 
         // found a match; set high bit to mark it
         //
         pData[i] |= 0x80;
         matches++;
+        }
     }
 
 }
+    //grab end time.
+    clock_t delta = (clock() - tStart);
 
-    uint64_t delta = (rdtsc() - tStart) / 100000;
+    //cout Usefull information.
+    cout << "Time: " << delta /1000000.0 << " uSec, Matches: " << matches << "\n";
+    cout << "Time / Clock Ticks: " << delta /(float)CLOCKS_PER_SEC << endl;
 
-
-    cout << "Time: " << delta << " uSec, Matches: " << matches << "\n";
-
+    //address of array with the search term in it.
     for (int i = 1; i < st.st_size-28; i++)
     {
         if (!(pData[i] & 0x80))
@@ -106,129 +98,6 @@ for(int p = 0; p < 100000; p++)
         //
         cout << "  Match: " << i << "\n";
     }
-}
-inline void searchIntbits(void)
-{
-    // get size of data file
-    //
-	struct stat st;
-	int status = stat(DATA_FILE, &st);
-	if (status < 0)
-    {
-        cout << "Cannot stat " << DATA_FILE << "\n";
-        //exit(0);
-    }
-
-    // we need at least 28 chars for the pattern and some following
-    //
-    if (st.st_size < 29)
-    {
-        cout << "Size of data file is too small.\n";
-        //exit(0);
-    }
-
-    // allocate array for data and read it in
-    //
-    char *pData = new char[st.st_size];
-
-    FILE *fp = fopen(DATA_FILE, "r");
-    if (!fp)
-    {
-        cout << "Cannot open " << DATA_FILE << "\n";
-        //exit(0);
-    }
-
-    fread(pData, st.st_size, 1, fp);
-    fclose(fp);
-
-
-    //  scan data starting 1 byte in
-    //
-    uint64_t tStart = rdtsc();
-
-    int matches = 0;
-    for (int i = 1; i < st.st_size-28; i++)
-    {
-        bool bFound = true;
-        for (int j = 0; j < 28; j++)
-        {
-            if (pData[j] != pData[i+j])
-            {
-                bFound = false;
-                break;
-            }
-        }
-        if (!bFound)
-            continue;
-
-        // found a match; set high bit to mark it
-        //
-        pData[i] |= 0x80;
-        matches++;
-    }
-
-    uint64_t delta = rdtsc() - tStart;
-
-
-    cout << "Time: " << delta << " uSec, Matches: " << matches << "\n";
-
-    for (int i = 1; i < st.st_size-28; i++)
-    {
-        if (!(pData[i] & 0x80))
-            continue;
-
-        // print match location
-        //
-        cout << "  Match: " << i << "\n";
-    }
-}
-
-void sortMarbles(void)
-{
-    char marbles[2000];
-    ifstream marbleFile;
-
-    marbleFile.open("marbles.txt");
-    for (int h = 0; h < 2000; h++)
-    {
-        marbleFile >> marbles[h];
-    }
-    marbleFile.close();
-
-    for (int j = 0; j < 2000; j++)
-        cout << marbles[j] << " ";
-    cout << endl;
-
-    char temp;
-    int r = 0;
-    int i = 0;
-    int b = 1999;
-    uint64_t tStart = rdtsc();
-    while(i <= b)
-    {
-        if (marbles[i] == 'B')
-        {
-            temp = marbles[b];
-            marbles[b] = marbles[i];
-            marbles[i] = temp;
-            b--;
-        }
-        else if (marbles[i] == 'W' || i <= r)
-            i++;
-        else    // i is pointing to a red marble
-        {
-            temp = marbles[r];
-            marbles[r] = marbles[i];
-            marbles[i] = temp;
-            r++;
-        }
-    }
-    uint64_t delta = rdtsc() - tStart;
-    for (int j = 0; j < 2000; j++)
-        cout << marbles[j] << " ";
-
-    cout << "\n\nSorted 2000 marbles in " << delta << " uSeconds.";
-
 }
 
 void sortMillMarbles(void)
@@ -236,43 +105,55 @@ void sortMillMarbles(void)
     //array variables
     char omarbles[2000];
     char marbles[2000];
+
     //file variables
     ifstream marbleFile;
+
     //Time variables.
-    uint64_t sum = 0;
-    uint64_t tStart;
-    //algorythm variables
+    clock_t sum = 0;
+    clock_t tStart;
+
+    //algorithm variables
     char temp;
     int r = 0;
     int i = 0;
     int b = 1999;
-
+    //read file
     marbleFile.open("marbles.txt");
     for (int h = 0; h < 2000; h++)
     {
         marbleFile >> omarbles[h];
     }
     marbleFile.close();
-
+    //out put marble array
     for (int j = 0; j < 2000; j++)
         {
             cout << omarbles[j] << " ";
         }
-        cout << endl << endl;
-    for(int count=1; count <=100000; count ++)
+    cout << endl << endl;
+    //Run marble sort a Million times.
+    for(int count=1; count <=1000000; count ++)
     {
+        //Reinitialize sorted array to original.
         for (int j = 0; j < 2000; j++)
         {
             marbles[j] = omarbles[j];
         }
-
+        //Reset Variables.
         r = 0;
         i = 0;
         b = 1999;
-
-        tStart = rdtsc();
+        //Start your engines.
+        tStart = clock();
+        //Main algorithmic loop.
+        // r marks the head of the sorted red marbles at the beginning of the array
+        // b marks the tail of the sorted blue marbles at the end of the array
+        // i marks the current marble to be sorted to either the red end or the blue end
+        // Thus, r and b move inward towards each other, leaving the white marbles in the middle.
+        // Once i has reached b, all the marbles have been sorted
         while(i <= b)
         {
+            // Swap the marbles at b and i if i has a blue marble
             if (marbles[i] == 'B')
             {
                 temp = marbles[b];
@@ -280,9 +161,11 @@ void sortMillMarbles(void)
                 marbles[i] = temp;
                 b--;
             }
+            // else if i is pointing to a white marble, move the index forward
             else if (marbles[i] == 'W' || i <= r)
                 i++;
-            else    // i is pointing to a red marble
+            // else i is pointing to a red marble; switch it with r
+            else
             {
                 temp = marbles[r];
                 marbles[r] = marbles[i];
@@ -290,12 +173,13 @@ void sortMillMarbles(void)
                 r++;
             }
         }
-        sum = rdtsc() - tStart + sum;
+        sum = clock() - tStart + sum;
     }//end 100,000 for loop
         for (int j = 0; j < 2000; j++)
             cout << marbles[j] << " ";
 
-        cout << "\n\nSorted 2000 marbles in " << sum / 100000 << " uSeconds.";
+        cout << "\n\nSorted 2000 marbles in " << sum / 1000000.0 << " uSeconds." << endl;
+        cout << "Time / Clock Ticks: " << sum /(float)CLOCKS_PER_SEC << endl;
 
 }
 
@@ -304,9 +188,7 @@ char prompt(char choice)
     cout << endl << "What would you like to do?" << endl;
     cout << endl;
     cout << "\t1) Search through intbits.txt" << endl;
-    cout << "\t2) Search through intbits.txt 100,000 times and find average." << endl;
-    cout << "\t3) Sort marbles.txt" << endl;
-    cout << "\t4) Sort marbles.txt 100,000 times." << endl;
+    cout << "\t2) Sort Marbles." << endl;
     cout << endl << "\t0) Quit." << endl;
     cout << endl << "Choice\n>>";
     cin >> choice;
@@ -343,18 +225,10 @@ int main()
         {
             case '1':
                 cout << "Searching...\n" << endl;
-                searchIntbits();
-                break;
-            case '2':
-                cout << "Searching...100,000 times...bear with us -______- ...\n" << endl;
                 runMil();
                 break;
-            case '3':
-                cout << "Sorting now?...\n" << endl;
-                sortMarbles();
-                break;
-            case '4':
-                cout << "Losing marbles...\n\nSorting 100,000 x 2,000 marbles..."<< endl;
+            case '2':
+                cout << "Sorting...\n" << endl;
                 sortMillMarbles();
                 break;
             case '0':
