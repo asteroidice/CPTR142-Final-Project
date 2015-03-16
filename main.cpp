@@ -1,6 +1,6 @@
 /*****************************************************************************
- Program file name:RPEN-main.cpp OS:Windows  Assignment #:FINAL
- Programmer:Ryan Rabello, Phe Wagner, Elliott Berger, Norman Sossong	Class: 	Data Struct. I			Date:
+ Program file name:PRECN-main.cpp OS:Windows  Assignment #:FINAL
+ Programmer:Ryan Rabello, Phe Wagner, Elliott Berger, Norman Sossong, Caleb Hunter	Class: 	Data Struct. I			Date:
  Compiler:GNU GCC
  
  Assistance/references:none
