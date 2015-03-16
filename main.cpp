@@ -1,3 +1,30 @@
+/*****************************************************************************
+ Program file name:RPEN-main.cpp OS:Windows  Assignment #:FINAL
+ Programmer:Ryan Rabello, Phe Wagner, Elliott Berger, Norman Sossong	Class: 	Data Struct. I			Date:
+ Compiler:GNU GCC
+ 
+ Assistance/references:none
+ Description:Searches an file quickly
+ Inputs: Intbits.txt and Marbles.txt
+ Outputs: addresses of found location and sorted marble array.
+ 
+ Special Comments: Dr Klein and Victor are awesome :) Thanks for a great quarter.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~Grading Criteria~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ Assignment Requirements ___/3.0
+
+ Code Format/Cosmetics ___/3.0
+
+ Header & Code Comments: ___/2.0
+
+ Output Format/Cosmetics ___/2.0
+ ***Does Not Compile***: ___ (-10.0)
+ ***Late Work Deduction***: ___ (-0.5/day)
+ Total Grade: ___/10.0
+
+*****************************************************************************/
+
 #include <iostream>
 #include "stdio.h"
 #include <sys/stat.h>
@@ -88,7 +115,14 @@ for(int p = 0; p < 1000000; p++)
     cout << "Time: " << delta /1000000.0 << " uSec, Matches: " << matches << "\n";
     cout << "Time / Clock Ticks: " << delta /(float)CLOCKS_PER_SEC << endl;
 
-    //address of array with the search term in it.
+    //address of array with the search term in it (including the first 28 bits)
+    /*
+    OUTPUT (to get the address without the search term subtract 28 from the following values)
+    Match: 1566
+    Match: 1663
+    Match: 1691
+    Match: 1916
+    */
     for (int i = 1; i < st.st_size-28; i++)
     {
         if (!(pData[i] & 0x80))
